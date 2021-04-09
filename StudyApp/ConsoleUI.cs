@@ -6,6 +6,9 @@ namespace StudyApp
     {
         public void Run(College college)
         {
+            Console.WriteLine($"College {college.Name}");
+            Console.WriteLine("---------------------");
+
             //int choose = StartMenu(college);
             //switch (choose)
             //{
@@ -24,44 +27,26 @@ namespace StudyApp
 
             //}
 
-            Group group = new Group("101717");
-            Student student1 = new Student("Andrej", "Cieraszkou");
-            Student student2 = new Student("Ales'", "Baczkarou");
-            Student student3 = new Student("Piatro", "Sabierau");
+            college.AddGroup();
 
-            college.AddGroup(group);
+            college.AddStudentDialogue();
 
-            college.AddStudentToGroup(1, student1);
-            college.AddStudentToGroup(1, student2);
-            college.AddStudentToGroup(1, student3);
-
-            group = new Group("101727");
-            college.groups.Add(group);
-            Student student = new Student("Maksim", "Baczkarou");
-            college.AddStudentToGroup(2, student);
-            student = new Student("Mscislau", "Cieraszkou");
-            college.AddStudentToGroup(2, student);
-            student = new Student("Alaksandar", "Lukaszenka");
-            college.AddStudentToGroup(2, student);
-
-            college.PrintGroups();
-            Console.WriteLine();
-            
-            college.PrintGroupById(1);
-            Console.WriteLine();
-            college.PrintGroupById(2);
-            Console.WriteLine();
+            if (college.groups.Count > 1)
+            {
+                college.AddStudentDialogue();
+                Console.WriteLine();
+            }
 
             college.PrintAllStudents();
             Console.WriteLine();
 
-            Console.WriteLine($"Test: Removing student with Id = 2");
-            college.RemoveStudentById(2);
+            Console.WriteLine("Test: Removing of student");
+            college.RemoveStudentDialogue();
             college.PrintAllStudents();
             Console.WriteLine();
 
-            Console.WriteLine("Test: updating of student with ID = 4");
-            college.UpdateStudentById(4, "Taciana", "Sakalova");
+            Console.WriteLine("Test: updating of student");
+            college.UpdateStudentDialogue();
             college.PrintAllStudents();
             Console.WriteLine();
             //StartGroupsMenu(college);
@@ -115,7 +100,7 @@ namespace StudyApp
         public void DeleteGroupMenu(College college)
         {
             Console.WriteLine();
-            college.PrintGroups();
+            college.PrintListOfGroups();
             Console.WriteLine();
             Console.WriteLine("Choose the group to delete");
             Console.WriteLine("Or return to previous menu - 0");

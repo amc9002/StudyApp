@@ -8,52 +8,126 @@ namespace StudyApp
     {
         public int Id { get; set; }
         public string Name { get; set; }
-    
-        public List<Student> Students;
+        public string Speciality { get; set; }
+        public List<Student> students;
+
+        public List<Subject> subjects;
 
         public static int count = 0;
-        public Group(string name)
+        public Group(string name, string speciality)
         {
             Group.count++;
             Id = Group.count;
             Name = name;
-            Students = new List<Student>();
+            Speciality = speciality;
+            students = new List<Student>();
+            subjects = new List<Subject>();
         }
-        public Student GetStudent(int student_id)
-        {
-            return Students.FirstOrDefault(s => s.Id == student_id);
-        }
-        public void AddStudent(Student student)
-        {
-            Students.Add(student);
-            SortByLastname();
-        }
-        public void RemoveStudent(int student_id)
-        {
-            Students.RemoveAll(s => s.Id == student_id);
-            SortByLastname();
-        }
-        public void UpdateStudent(Student student, string firstName, string lastName)
-        {
-            student.FirstName = firstName;
-            student.LastName = lastName;
-        }
-        public void SortByLastname()
-        {
-            var SortedStudents = (from s in Students orderby s.LastName select s).ToList();
-            Students = SortedStudents;
-        }
+        public Group() { }
         public void PrintGroup()
         {
-            Console.WriteLine("Group " + Name);
+            Console.WriteLine($"Group {Name}  {Speciality}");
             Console.WriteLine("---------------------------");
             Console.WriteLine(" N  Id     Student");
             Console.WriteLine("---------------------------");
-            for (int i = 0; i < Students.Count; i++)
+            for (int i = 0; i < students.Count; i++)
             {
                 Console.Write($" {i + 1} | ");
-                Students[i].PrintStudent();
+                students[i].PrintStudent();
             }
+        }
+
+        public Student GetStudent(int student_id)
+        {
+            return students.FirstOrDefault(s => s.Id == student_id);
+        }
+        public bool AddStudent()
+        {
+            string[] student_name;
+
+            string student_name_ = Console.ReadLine();
+            if (student_name_ == "0") { return false; }
+
+            student_name = student_name_.Split(' ');
+            Student new_student = new Student(student_name[0], student_name[1]);
+
+            students.Add(new_student);
+            SortStudentsByLastname();
+            return true;
+        }
+        public void AddStudent(Student student)
+        {
+            students.Add(student);
+            SortStudentsByLastname();
+        }
+        public void RemoveStudent(int student_id)
+        {
+            students.RemoveAll(s => s.Id == student_id);
+            SortStudentsByLastname();
+        }
+        public void UpdateStudent()
+        {
+            Console.WriteLine("Enter Id of student to update: ");
+            int student_id = int.Parse(Console.ReadLine());
+            Console.WriteLine($"Enter first name of student to update ({GetStudent(student_id).FirstName}): ");
+            string firstName = Console.ReadLine();
+            Console.WriteLine($"Enter last name of student to update ({GetStudent(student_id).LastName}): ");
+            string lastName = Console.ReadLine();
+
+            GetStudent(student_id).FirstName = firstName;
+            GetStudent(student_id).LastName = lastName;
+
+            SortStudentsByLastname();
+        }
+        public void SortStudentsByLastname()
+        {
+            var SortedStudents = (from s in students orderby s.LastName select s).ToList();
+            students = SortedStudents;
+        }
+
+        public void AddMark(int student_id, int teacher_id)
+        {
+            Console.WriteLine("You need an ID of a subject. Do you need a help (Y/N)");
+            string need_help = Console.ReadLine();
+            if (need_help == "Y" || need_help == "y")
+                PrintListOfSubjects();
+
+            Console.WriteLine("Enter ID of a subject: ");
+            int subject_id = int.Parse(Console.ReadLine());
+            Console.WriteLine("Enter score: ");
+            int score = int.Parse(Console.ReadLine());
+
+            Mark mark = new Mark(DateTime.Now, teacher_id, subject_id, score);
+
+            GetStudent(student_id).marks.Add(mark);
+            
+        }
+        public void PrintMarksOfStudentBySubject(int student_id, int subject_id)
+        {
+            Console.WriteLine(GetSubject(subject_id).Name);
+            GetStudent(student_id).PrintMarksBySubjectId(subject_id);
+        }
+        public void PrintAllMarksOfStudent(int student_id)
+        {
+            GetStudent(student_id).PrintStudent();
+            
+            foreach (Subject s in subjects)
+                PrintMarksOfStudentBySubject(student_id, s.Id);
+        }
+
+        public Subject GetSubject(int subject_id)
+        {
+            return subjects.FirstOrDefault(s => s.Id == subject_id);
+        }
+        public void PrintListOfSubjects()
+        {
+            Console.WriteLine($"There are subjects in the group {Name}");
+            Console.WriteLine("----------------------------------");
+            Console.WriteLine("     Name                   ID");
+            Console.WriteLine("----------------------------------");
+            foreach (var s in subjects)
+                Console.WriteLine($" {s.Name, -15}      { s.Id }");
+            Console.WriteLine("----------------------------------");
         }
     }
 
