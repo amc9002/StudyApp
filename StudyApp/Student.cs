@@ -9,6 +9,10 @@ namespace StudyApp
         public int Id { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
+        public string GroupName { get; set; }
+        public int GroupId { get; set; }
+        public string Speciality { get; set; }
+
         public List<Mark> marks;
         public static int count = 0;
 
@@ -19,6 +23,15 @@ namespace StudyApp
             FirstName = firstName;
             LastName = lastName;
             marks = new List<Mark>();
+        }
+        public Student(int id, string firstName, string lastName, int groupId, string groupName, string speciality)
+        {
+            Id = id;
+            FirstName = firstName;
+            LastName = lastName;
+            GroupId = groupId;
+            GroupName = groupName;
+            Speciality = speciality;
         }
         public Student(int id, string firstName, string lastName)
         {
@@ -34,7 +47,7 @@ namespace StudyApp
         {
             Console.Write("   Date     |  Score  |");
             foreach (Mark m in marks)
-                if (m.Subjects_Id == subject_id) 
+                if (m.Subjects_Id == subject_id)
                     Console.WriteLine($" |{m.Date.ToString("d")} | {m.Score}");
             Console.WriteLine();
         }

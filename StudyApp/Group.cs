@@ -65,20 +65,6 @@ namespace StudyApp
             students.RemoveAll(s => s.Id == student_id);
             SortStudentsByLastname();
         }
-        public void UpdateStudent()
-        {
-            Console.WriteLine("Enter Id of student to update: ");
-            int student_id = int.Parse(Console.ReadLine());
-            Console.WriteLine($"Enter first name of student to update ({GetStudent(student_id).FirstName}): ");
-            string firstName = Console.ReadLine();
-            Console.WriteLine($"Enter last name of student to update ({GetStudent(student_id).LastName}): ");
-            string lastName = Console.ReadLine();
-
-            GetStudent(student_id).FirstName = firstName;
-            GetStudent(student_id).LastName = lastName;
-
-            SortStudentsByLastname();
-        }
         public void SortStudentsByLastname()
         {
             var SortedStudents = (from s in students orderby s.LastName select s).ToList();
