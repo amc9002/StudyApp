@@ -7,13 +7,12 @@ namespace StudyApp
     class College
     {
         public string Name { get; set; }
-        public List<Group> groups;
-        public List<Teacher> teachers;
+        public List<Group> groups = new List<Group>();
+        public List<Teacher> teachers = new List<Teacher>();
+        public List<Subject> subjects = new List<Subject>();
         public College(string name)
         {
             Name = name;
-            groups = new List<Group>();
-            teachers = new List<Teacher>();
         }
         public Group GetGroup(int group_id)
         {
@@ -27,8 +26,21 @@ namespace StudyApp
                         return g;
                 }
             return null;
-        }       
-        
+        }
+        public void PrintGroups()
+        {
+            Console.WriteLine($"  College {Name}");
+            Console.WriteLine("There are the groups in the college:");
+            Console.WriteLine("---------------------------");
+            Console.WriteLine(" N  Id   Name      Speciality");
+            Console.WriteLine("---------------------------");
+            int i = 0;
+            foreach (Group g in groups) {
+                Console.WriteLine($"{i + 1} | {g.Id} | {g.Name} | {g.Speciality}");
+                i++;
+            }
+        }
+
         public Teacher GetTeacher(int teacher_id)
         {
             return teachers.FirstOrDefault(t => t.Id == teacher_id);

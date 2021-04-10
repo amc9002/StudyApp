@@ -9,7 +9,8 @@ namespace StudyApp
         public int Id { get; set; }
         public string Name { get; set; }
         public string Speciality { get; set; }
-        public List<Student> students;
+        public List<Student> students = new List<Student>();
+        public List<int> subjectsId = new List<int>();
 
         public List<Subject> subjects;
 
@@ -20,10 +21,8 @@ namespace StudyApp
             Id = Group.count;
             Name = name;
             Speciality = speciality;
-            students = new List<Student>();
             subjects = new List<Subject>();
         }
-        public Group() { }
         public void PrintGroup()
         {
             Console.WriteLine($"Group {Name}  {Speciality}");
@@ -88,17 +87,17 @@ namespace StudyApp
             GetStudent(student_id).marks.Add(mark);
             
         }
-        public void PrintMarksOfStudentBySubject(int student_id, int subject_id)
+        public void PrintMarksOfStudentBySubject(Student student, int subject_id)
         {
             Console.WriteLine(GetSubject(subject_id).Name);
-            GetStudent(student_id).PrintMarksBySubjectId(subject_id);
+            student.PrintMarksBySubjectId(subject_id);
         }
-        public void PrintAllMarksOfStudent(int student_id)
+        public void PrintAllMarksOfStudent(Student student)
         {
-            GetStudent(student_id).PrintStudent();
+            student.PrintStudent();
             
             foreach (Subject s in subjects)
-                PrintMarksOfStudentBySubject(student_id, s.Id);
+                PrintMarksOfStudentBySubject(student.Id, s.Id);
         }
 
         public Subject GetSubject(int subject_id)

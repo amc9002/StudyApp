@@ -63,19 +63,16 @@ namespace StudyApp
             Console.WriteLine("Adding of group");
             Console.WriteLine("-------------------");
 
-            if (college.groups.Count < 1)
-            {
+            if (college.groups.Count < 1) {
                 Console.WriteLine("There are no groups yet there");
                 Console.WriteLine("Enter name of the first group or 0 - done: ");
             }
-            else
-            {
-                PrintListOfGroups(college);
+            else {
+                college.PrintGroups();
                 Console.WriteLine("Enter, please, name of another group or 0 - done");
             }
 
-            while (true)
-            {
+            while (true) {
                 group_name = Console.ReadLine();
                 if (group_name == "0")
                     break;
@@ -86,44 +83,29 @@ namespace StudyApp
 
                 college.groups.Add(group);
 
-                PrintListOfGroups(college);
+                college.PrintGroups();
                 Console.WriteLine("Enter, please, name of another group or 0 - done");
             }
             Console.WriteLine("Done!");
 
-            PrintListOfGroups(college);
+            college.PrintGroups();
         }
         public int ChooseGroupId()
         {
             Console.WriteLine("Enter Id of group: ");
             int group_id = int.Parse(Console.ReadLine());
             return group_id;
-        }
-        public void PrintListOfGroups(College college)
-        {
-            Console.WriteLine($"  College {college.Name}");
-            Console.WriteLine("There are the groups in the college:");
-            Console.WriteLine("---------------------------");
-            Console.WriteLine(" N  Id   Name      Speciality");
-            Console.WriteLine("---------------------------");
-            int i = 0;
-            foreach (Group g in college.groups)
-            {
-                Console.WriteLine($"{i + 1} | {g.Id} | {g.Name} | {g.Speciality}");
-                i++;
-            }
-        }
+        }      
 
         public void AddStudent(College college)
         {
             int group_id;
-            PrintListOfGroups(college);
+            college.PrintGroups();
 
             Console.WriteLine("Adding of a student");
             Console.WriteLine("-------------------");
 
-            while (true)
-            {
+            while (true) {
                 group_id = ChooseGroupId();
                 if (college.GetGroup(group_id) != null) { break; }
 
@@ -153,42 +135,37 @@ namespace StudyApp
             switch (choose)
             {
                 case "1":
-                    PrintListOfGroups(college);
+                    college.PrintGroups();
 
                     from_group_id = ChooseGroupId();
                     college.GetGroup(from_group_id).PrintGroup();
 
-                    Console.WriteLine("Enter Id of student to update: ");
-                    int student_id = int.Parse(Console.ReadLine());
-                    string firstName, lastName;
-                    firstName = college.GetGroup(from_group_id).GetStudent(student_id).FirstName;
-                    lastName = college.GetGroup(from_group_id).GetStudent(student_id).LastName;
-                    Console.WriteLine($"Enter first name of student to update ({firstName}): ");
-                    firstName = Console.ReadLine();
-                    Console.WriteLine($"Enter last name of student to update ({lastName}): ");
-                    lastName = Console.ReadLine();
+                    Student student = FindStudent(college);
 
-                    college.GetGroup(from_group_id).GetStudent(student_id).FirstName = firstName;
-                    college.GetGroup(from_group_id).GetStudent(student_id).LastName = lastName;
+                    Console.WriteLine($"Enter first name of student to update ({student.FirstName}): ");
+                    string firstName = Console.ReadLine();
+                    Console.WriteLine($"Enter last name of student to update ({student.LastName}): ");
+                    string lastName = Console.ReadLine();
+
+                    student.FirstName = firstName;
+                    student.LastName = lastName;
 
                     college.GetGroup(from_group_id).SortStudentsByLastname();
                     college.GetGroup(from_group_id).PrintGroup();
 
                     break;
                 case "2":
-                    PrintListOfGroups(college);
+                    college.PrintGroups();
                     Console.WriteLine("What group to transfer from?");
                     from_group_id = ChooseGroupId();
                     college.GetGroup(from_group_id).PrintGroup();
 
-                    Console.WriteLine("Choose ID of student: ");
-                    student_id = int.Parse(Console.ReadLine());
+                    student = FindStudent(college);
 
                     Console.WriteLine(" Id     Student");
                     Console.WriteLine("----------------------");
 
-                    college.GetGroup(from_group_id).GetStudent(student_id).PrintStudent();
-                    Student temp_student = college.GetGroup(from_group_id).GetStudent(student_id);
+                    student.PrintStudent();
 
                     Console.WriteLine("What group to transfer to?");
                     to_group_id = ChooseGroupId();
@@ -198,8 +175,8 @@ namespace StudyApp
                     string sure = Console.ReadLine();
                     if (sure == "Y" || sure == "y") {
                         Console.WriteLine("Transfer");
-                        college.GetGroup(from_group_id).RemoveStudent(student_id);
-                        college.GetGroup(to_group_id).AddStudent(temp_student);
+                        college.GetGroup(to_group_id).AddStudent(student);
+                        college.GetGroup(from_group_id).RemoveStudent(student.Id);
                     }
                     break;
                 default:
@@ -209,22 +186,16 @@ namespace StudyApp
         }
         public void RemoveStudent(College college)
         {
-            int student_id;
-
             Console.WriteLine("Removing of a student");
             Console.WriteLine("---------------------");
 
-            PrintAllStudents(college);
-            Console.WriteLine("Enter Id of student to remove: ");
-            student_id = int.Parse(Console.ReadLine());
+            Student student = FindStudent(college);
 
             Console.WriteLine("Are you sure? (Y/N)");
             string sure = Console.ReadLine();
-
             if (sure == "Y" || sure == "y")
-                foreach (Group g in college.groups)
-                {
-                    g.RemoveStudent(student_id);
+                foreach (Group g in college.groups) {
+                    g.RemoveStudent(student.Id);
                     break;
                 }
             Console.WriteLine("Done!");
@@ -260,7 +231,7 @@ namespace StudyApp
                         $"{s.GroupName,10}   {s.GroupId,3}   {s.Speciality,20}");
                 }
         }
-        public void HelpFindStudentsId(College college)
+        public Student FindStudent(College college)
         {
             Console.WriteLine("You need ID of student ");
             Console.WriteLine("Do you need help to find them (Y/N):");
@@ -273,12 +244,24 @@ namespace StudyApp
                 string search = Console.ReadLine();
                 if (search == "1")
                     PrintAllStudents(college);
-                if (search == "2")
-                {
-                    PrintListOfGroups(college);
+                if (search == "2") {
+                    college.PrintGroups();
                     college.GetGroup(ChooseGroupId()).PrintGroup();
                 }
             }
+            Console.WriteLine("Enter, please, ID of a student:");
+            int student_id = int.Parse(Console.ReadLine());
+            Student student;
+            while (true) {
+                if (college.FindGroupByStudentId(student_id) != null) {
+                    student = college.FindGroupByStudentId(student_id).GetStudent(student_id);
+                    break;
+                }
+                Console.WriteLine($"There are no student with ID {student_id}");
+                Console.WriteLine("Enter, please, ID of a student:");
+                student_id = int.Parse(Console.ReadLine());
+            }
+            return student;
         }
 
         public void AddTeacher(College college)
@@ -354,7 +337,7 @@ namespace StudyApp
                 PrintAllTeachers(college);
         }
 
-        public void AddMarkDialogue(College college)
+        public void AddMark(College college)
         {
             HelpFindTeacherId(college);
             Console.WriteLine("Enter, please, your teachers ID:");
@@ -362,25 +345,11 @@ namespace StudyApp
             Console.Write("Teacher ");
             college.GetTeacher(teacher_id).PrintTeacher();
 
-            HelpFindStudentsId(college);
+            Student student = FindStudent(college);
 
-            Console.WriteLine("Enter, please, ID of a student:");
-            int student_id = int.Parse(Console.ReadLine());
-            Student student;
-            while (true) {
-                if (college.FindGroupByStudentId(student_id) != null) {
-                    student = college.FindGroupByStudentId(student_id).GetStudent(student_id);
-                    break;
-                }
-                Console.WriteLine($"There are no student with ID {student_id}");
-                Console.WriteLine("Enter, please, ID of a student:");
-                student_id = int.Parse(Console.ReadLine());
-            }
             //student.AddMark(student_id, teacher_id);
-            string firstname = college.FindGroupByStudentId(student_id).GetStudent(student_id).FirstName;
-            string lastname = college.FindGroupByStudentId(student_id).GetStudent(student_id).LastName;
 
-            Console.WriteLine($"Student {firstname} {lastname} is getting:");
+            Console.WriteLine($"Student {student.FirstName} {student.LastName} is getting:");
 
             //datetime date = findgroupbystudentid(student_id).getstudent(student_id).marks.findlast().date;
             //console.writeline(" date    |       subjects name       | score |   teacher");
@@ -433,7 +402,7 @@ namespace StudyApp
         public void DeleteGroupMenu(College college)
         {
             Console.WriteLine();
-            PrintListOfGroups(college);
+            college.PrintGroups();
             Console.WriteLine();
             Console.WriteLine("Choose the group to delete");
             Console.WriteLine("Or return to previous menu - 0");

@@ -24,6 +24,12 @@ namespace StudyApp
             LastName = lastName;
             marks = new List<Mark>();
         }
+        public Student(int id, string firstName, string lastName)
+        {
+            Id = id;
+            FirstName = firstName;
+            LastName = lastName;
+        }
         public Student(int id, string firstName, string lastName, int groupId, string groupName, string speciality)
         {
             Id = id;
@@ -33,12 +39,7 @@ namespace StudyApp
             GroupName = groupName;
             Speciality = speciality;
         }
-        public Student(int id, string firstName, string lastName)
-        {
-            Id = id;
-            FirstName = firstName;
-            LastName = lastName;
-        }
+
         public void PrintStudent()
         {
             Console.WriteLine($"{Id} | {LastName} {FirstName}");
