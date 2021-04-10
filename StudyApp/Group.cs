@@ -97,7 +97,7 @@ namespace StudyApp
             student.PrintStudent();
             
             foreach (Subject s in subjects)
-                PrintMarksOfStudentBySubject(student.Id, s.Id);
+                PrintMarksOfStudentBySubject(student, s.Id);
         }
 
         public Subject GetSubject(int subject_id)

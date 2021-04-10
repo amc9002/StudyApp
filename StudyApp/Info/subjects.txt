@@ -1,0 +1,21 @@
+English
+German
+C# development
+C++ development
+Frontend by HTML/CSS
+Databases
+Theory of algorithmes
+Theory of systems
+Theory of graphs
+Theory of shedules
+Algebra
+Analytic geometry
+Mathematic analysis
+Linear algebra
+Linear programming
+Multimedia
+WEB development by CMS
+Discrete mathematics
+Math logic
+Logical programming
+Computer architecture

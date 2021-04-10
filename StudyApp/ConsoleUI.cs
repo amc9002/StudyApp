@@ -2,15 +2,17 @@
 using System.Collections.Generic;
 using System.Linq;
 
+
 namespace StudyApp
 {
     class ConsoleUI
     {
         public void Run(College college)
         {
+            college.GetSubjectsFromFile();
             Console.WriteLine($"College {college.Name}");
             Console.WriteLine("---------------------");
-
+            college.PrintSubjects();
             //int choose = StartMenu(college);
             //switch (choose)
             //{
@@ -420,5 +422,9 @@ namespace StudyApp
             //Console.WriteLine("Find teacher - 2");
             //Console.WriteLine("Delete teacher - 3");
         }
+
+        
+
+
     }
 }

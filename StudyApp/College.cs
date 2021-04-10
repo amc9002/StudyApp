@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.IO;
 
 namespace StudyApp
 {
@@ -54,6 +55,37 @@ namespace StudyApp
             var SortedTeachers = (from t in teachers orderby t.LastName select t).ToList();
             teachers = SortedTeachers;
         }
-        
+
+        private StreamReader StreamReader(string v)
+        {
+            throw new NotImplementedException();
+        }
+        public void GetSubjectsFromFile()
+        {
+            var exePath = AppDomain.CurrentDomain.BaseDirectory;//path to exe file
+            var path = Path.Combine(exePath, @"Info\\subject.txt");
+            List<string> subJects_names = new List<string>();
+            string subject_name;
+            using (StreamReader sr = new StreamReader(path, System.Text.Encoding.Default))
+                while ((subject_name = sr.ReadLine()) != null)
+                {
+                subJects_names.Add(subject_name);
+            }
+            foreach (var sn in subJects_names) {
+                Subject subject = new Subject(sn);
+                subjects.Add(subject);
+            }
+        }
+        public void PrintSubjects()
+        {
+            Console.WriteLine("There are the subjects in the college:");
+            Console.WriteLine("--------------------------------------");
+            Console.WriteLine( " ID             Subject");
+            Console.WriteLine("---------------------------------------");
+            foreach(var s in subjects)
+                Console.WriteLine($" {s.Id}  {s.Name}");
+            Console.WriteLine("---------------------------------------");
+        }
+
     }
 }
